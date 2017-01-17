@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private opencv_core.Mat[] images_ref;
 
     private Uri mImageUri;
+    private String result;
 
 
     public static File ToCache(Context context, String Path, String fileName) {
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCapture.setOnClickListener(this);
         btnLibrary.setOnClickListener(this);
         btnAnalysis.setOnClickListener(this);
+        imageCaptured.setOnClickListener(this);
 
         SiftDesc = new opencv_nonfree.SIFT(N_FEATURES, N_OCTAVE_LAYERS, CONTRAST_THRESHOLD, EDGE_THRESHOLD, SIGMA);
 
@@ -138,16 +140,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //Click on Analysis Button
             case R.id.btnAnalysis:
-
-
                 filePath = mImageUri.getPath();
-
                 Log.i(tag, "absolutepath "+filePath);
 
-
-
                 try {
-                    String result = analyse();
+                    result = analyse();
                     Log.i(tag,"result = "+result);
 
                     //Display the matched file
@@ -167,11 +164,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
 
-
-
-
-
                 break;
+            case R.id.imageCaptured:
+                //Ouvrir navigateur web avec l'url de l'image matchée
+                //String fileName = bestFileMatching.getName();
+                String fileName = result;
+                fileName = fileName.substring(0,fileName.lastIndexOf('_'));
+                String url = "https://fr.wikipedia.org/wiki/"+fileName;
+                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url ) );
+                startActivity(intent);
             default:
                 break;
         }
